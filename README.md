@@ -22,5 +22,5 @@ dotnet add src/Sprang.Api/Sprang.Api.csproj reference src/Sprang.Core/Sprang.Cor
 dotnet test
 
 git add .
-git commit -m "Estrutura Inicial"
+git commit -m "Estrutura de Repository & Producer"
 git push
