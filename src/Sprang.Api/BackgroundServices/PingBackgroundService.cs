@@ -4,12 +4,6 @@ using Microsoft.Extensions.Options;
 namespace Sprang.Api.BackgroundServices;
 public class PingWebsiteSettings
 {
-    public PingWebsiteSettings(Uri url, int timeIntervalInMinutes)
-    {
-        Url = url;
-        TimeIntervalInMinutes = timeIntervalInMinutes;
-    }
-
     public Uri Url { get; set; }
     public int TimeIntervalInMinutes { get; set; }
 }
@@ -17,17 +11,16 @@ public class PingBackgroundService : BackgroundService
 {
     private readonly HttpClient _client;
     private readonly ILogger<PingBackgroundService> _logger;
-    private readonly IOptions<PingWebsiteSettings> _configuration;
+    private readonly PingWebsiteSettings _configuration;
 
     public PingBackgroundService(
         IHttpClientFactory httpClientFactory,
         ILogger<PingBackgroundService> logger,
         IOptions<PingWebsiteSettings> configuration)
     {
-
         _client = httpClientFactory.CreateClient(nameof(PingBackgroundService));
         _logger = logger;
-        _configuration = configuration;
+        _configuration = configuration.Value;
     }
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -35,10 +28,10 @@ public class PingBackgroundService : BackgroundService
         while (!cancellationToken.IsCancellationRequested)
         {
             _logger.LogInformation("{BackgroundService} running at '{Date}', pinging '{URL}'",
-                nameof(PingBackgroundService), DateTime.Now, _configuration.Value.Url);
+                nameof(PingBackgroundService), DateTime.Now, _configuration.Url);
             try
             {
-                using var response = await _client.GetAsync(_configuration.Value.Url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
+                using var response = await _client.GetAsync(_configuration.Url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
                 //_logger.LogInformation("Is '{Host}' responding: {Status}",
                 //    _configuration.Value.Url.Authority, response.IsSuccessStatusCode);
             }

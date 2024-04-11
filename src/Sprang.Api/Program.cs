@@ -3,16 +3,13 @@ using Sprang.Api.BackgroundServices;
 using Sprang.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+IConfiguration _configuration = builder.Configuration;
 
 builder.Services.AddCore();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-
-builder.Services.Configure<PingWebsiteSettings>(x => new PingWebsiteSettings(new Uri("https://google.com"), 60));
-builder.Services.AddHostedService<PingBackgroundService>();
-builder.Services.AddHttpClient(nameof(PingBackgroundService));
 
 builder.Services.AddHealthChecks()
     .Add(new HealthCheckRegistration(
@@ -26,6 +23,10 @@ builder.Services.AddHealthChecks()
         Period = TimeSpan.FromSeconds(30)
     });
 
+
+builder.Services.Configure<PingWebsiteSettings>(_configuration.GetSection("PingWebsite"));
+builder.Services.AddHostedService<PingBackgroundService>();
+builder.Services.AddHttpClient(nameof(PingBackgroundService));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
