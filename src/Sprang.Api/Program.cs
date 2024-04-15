@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Serilog;
 using Sprang.Api.BackgroundServices;
+using Sprang.Api.Features;
 using Sprang.Core;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +30,10 @@ builder.Services.AddHealthChecks()
 builder.Services.Configure<PingWebsiteSettings>(_configuration.GetSection("PingWebsite"));
 builder.Services.AddHostedService<PingBackgroundService>();
 builder.Services.AddHttpClient(nameof(PingBackgroundService));
+
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -41,6 +48,26 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.MapHealthChecks("/healthz");
 
+app.UseExceptionHandler(x =>
+{
+    x.Run(async context =>
+    {
+        context.Response.StatusCode = 500;
+        context.Response.ContentType = "application/json";
+
+        var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
+        if (contextFeature is not null)
+        {
+            await context.Response.WriteAsJsonAsync(new
+            {
+                StatusCodes = context.Response.StatusCode,
+                Message = "Internal Server Error"
+            });
+        }
+    });
+});
+app.UseSerilogRequestLogging();
+app.UseRequestContextLogging();
 app.Run();
 
 public partial class Program
