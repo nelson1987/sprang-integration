@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Serilog;
 using Sprang.Api.BackgroundServices;
@@ -33,6 +34,15 @@ builder.Services.AddHttpClient(nameof(PingBackgroundService));
 
 builder.Host.UseSerilog((context, loggerConfig) =>
     loggerConfig.ReadFrom.Configuration(context.Configuration));
+
+builder.Services.AddRateLimiter(x =>
+{
+    x.AddFixedWindowLimiter("Fixed", opt =>
+    {
+        opt.Window = TimeSpan.FromSeconds(10);
+        opt.PermitLimit = 5;
+    });
+});
 
 var app = builder.Build();
 

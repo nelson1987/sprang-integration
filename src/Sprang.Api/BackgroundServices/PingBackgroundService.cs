@@ -7,6 +7,7 @@ public class PingWebsiteSettings
     public Uri Url { get; set; }
     public int TimeIntervalInMinutes { get; set; }
 }
+
 public class PingBackgroundService : BackgroundService
 {
     private readonly HttpClient _client;
@@ -39,19 +40,16 @@ public class PingBackgroundService : BackgroundService
             {
                 _logger.LogWarning(ex, "Error during ping");
             }
-            //await _timer.WaitForNextTickAsync(cancellationToken);
         }
-        //_timer.Dispose();
     }
 }
+
 public class SampleHealthCheck : IHealthCheck
 {
     public Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         var isHealthy = true;
-
-        // ...
 
         if (isHealthy)
         {

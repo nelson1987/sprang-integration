@@ -36,3 +36,4 @@ git push
 #### https://github.com/referbruv/ContainerNinja.CleanArchitecture
 #### https://github.com/iammukeshm/AspNetCoreHero-Boilerplate
 #### https://github.com/lkurzyniec/netcore-boilerplate?tab=readme-ov-file
+#### https://github.com/rramname/KTCDocker
