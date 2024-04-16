@@ -32,8 +32,8 @@ builder.Services.Configure<PingWebsiteSettings>(_configuration.GetSection("PingW
 builder.Services.AddHostedService<PingBackgroundService>();
 builder.Services.AddHttpClient(nameof(PingBackgroundService));
 
-builder.Host.UseSerilog((context, loggerConfig) =>
-    loggerConfig.ReadFrom.Configuration(context.Configuration));
+//builder.Host.UseSerilog((context, loggerConfig) =>
+//    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddRateLimiter(x =>
 {
@@ -76,8 +76,8 @@ app.UseExceptionHandler(x =>
         }
     });
 });
-app.UseSerilogRequestLogging();
-app.UseRequestContextLogging();
+//app.UseSerilogRequestLogging();
+//app.UseRequestContextLogging();
 app.Run();
 
 public partial class Program

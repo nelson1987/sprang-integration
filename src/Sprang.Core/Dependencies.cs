@@ -39,10 +39,10 @@ public class MovimentacaoHandler : IMovimentacaoHandler
     public async Task Handle(MovimentacaoCommand command, CancellationToken cancellationToken = default)
     {
         var validation = await _validator.ValidateAsync(command, cancellationToken);
-        if (!validation.IsValid)
-        {
-            throw new NotImplementedException();
-        }
+        //if (!validation.IsValid)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         await Task.CompletedTask;
     }

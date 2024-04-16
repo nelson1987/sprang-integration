@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Serilog.Context;
 using Sprang.Core;
+using System.Text;
+using RabbitMQ.Client;
+using System.Reflection;
 
 namespace Sprang.Api.Features;
 
@@ -14,6 +18,33 @@ public class MovimentacoesController : ApiControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> GetSantaCar([FromServices] IMovimentacaoHandler handler, [FromBody] MovimentacaoCommand command, CancellationToken cancellationToken = default)
     {
+        var factory = new ConnectionFactory
+        {
+            HostName = "localhost",
+            UserName = "guest",
+            Password = "guest"
+        };
+
+        factory.ClientProvidedName = "app:audit component:event-consumer";
+        using var connection = factory.CreateConnection();
+        using var model = connection.CreateModel();
+
+        var message = "GetMessage(args)";
+        byte[] messagebuffer = Encoding.UTF8.GetBytes(message);
+        var properties = model.CreateBasicProperties();
+        properties.ContentType = "text/plain";
+        properties.DeliveryMode = 2;
+        properties.Headers = new Dictionary<string, object>()
+        {
+            { "latitude", 51.5252949 },
+            { "longitude", -0.0905493 }
+        };
+        properties.Persistent = false;
+        properties.Expiration = "3600";
+        properties.CorrelationId = Guid.NewGuid().ToString();
+
+        model.BasicPublish("demoExchange", "directexchange_key", properties, messagebuffer);
+
         await handler.Handle(command, cancellationToken);
         return Created();
     }
