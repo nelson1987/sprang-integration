@@ -1,5 +1,3 @@
-using Sprang.Api.Features;
-
 namespace Sprang.Core.Features.Employees;
 
 public interface IEmployeeRepository

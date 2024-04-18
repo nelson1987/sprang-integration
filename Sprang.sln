@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{96DFAF81
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprang.Tests", "tests\Sprang.Tests\Sprang.Tests.csproj", "{02B58B0C-3476-4F99-8040-089FE89E13DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprang.Tests.Api", "Sprang.Tests.Api\Sprang.Tests.Api.csproj", "{2804E04C-AF33-458F-A859-A4321808639D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{02B58B0C-3476-4F99-8040-089FE89E13DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02B58B0C-3476-4F99-8040-089FE89E13DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02B58B0C-3476-4F99-8040-089FE89E13DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2804E04C-AF33-458F-A859-A4321808639D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2804E04C-AF33-458F-A859-A4321808639D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2804E04C-AF33-458F-A859-A4321808639D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2804E04C-AF33-458F-A859-A4321808639D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,6 +45,7 @@ Global
 		{EEE1EFA3-E19C-4441-B4AE-22F3EBFE712C} = {2D035088-D6F5-4089-8E93-EEA35475F75C}
 		{2F4F6AA4-A8E2-4AFF-9063-F93388A093E6} = {2D035088-D6F5-4089-8E93-EEA35475F75C}
 		{02B58B0C-3476-4F99-8040-089FE89E13DC} = {96DFAF81-D17A-4C9B-9EE3-B1EFFAD970EB}
+		{2804E04C-AF33-458F-A859-A4321808639D} = {2D035088-D6F5-4089-8E93-EEA35475F75C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0C99438B-7226-40B7-84D8-F191703DFBE9}
