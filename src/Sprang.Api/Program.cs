@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Serilog;
 using Sprang.Api.BackgroundServices;
-using Sprang.Api.Features;
+using Sprang.Api.HealthChecks;
 using Sprang.Core;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,74 +1,40 @@
-﻿using System.Text;
-using Microsoft.Extensions.Options;
-using RabbitMQ.Client.Events;
 using RabbitMQ.Client;
 
-namespace Sprang.ApiTests.HostedServices
+namespace Sprang.Api.BackgroundServices;
+
+public class Consumer
 {
-    public class PingConsumer : BackgroundService
+    private async Task WaitAndRunChannel(IModel channel, string queueName)
     {
-        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+        MessageReceiver messageReceiver = new MessageReceiver(channel);
+        channel.BasicConsume("demoqueue", false, messageReceiver);
+    }
+
+    public async Task Consume(CancellationToken cancanCancellationToken)
+    {
+        try
         {
-            while (!cancellationToken.IsCancellationRequested)
+            await Task.Run(() =>
             {
-                //_logger.LogInformation("{BackgroundService} running at '{Date}', pinging '{URL}'",
-                //    nameof(PingBackgroundService), DateTime.Now, _configuration.Url);
-                try
+                var factory = new ConnectionFactory
                 {
-                    //var factory = new ConnectionFactory { HostName = "localhost" };
-                    //using var connection = factory.CreateConnection();
-                    //using var channel = connection.CreateModel();
+                    Uri = new Uri("amqp://guest:guest@localhost:5672/")
+                };
+                using var connection = factory.CreateConnection();
+                var channel = connection.CreateModel();
+                channel.ExchangeDeclare("demoExchange", ExchangeType.Direct);
+                channel.QueueDeclare("demoqueue", false, false, false, null);
+                channel.QueueBind("demoqueue", "demoExchange", "directexchange_key");
+                channel.BasicQos(0, 1, true);
+                WaitAndRunChannel(channel, "demoqueue");
 
-                    //channel.QueueDeclare(queue: "hello",
-                    //    durable: false,
-                    //    exclusive: false,
-                    //    autoDelete: false,
-                    //    arguments: null);
-
-                    //var consumer = new EventingBasicConsumer(channel);
-                    //consumer.Received += (model, ea) =>
-                    //{
-                    //    var body = ea.Body.ToArray();
-                    //    var message = Encoding.UTF8.GetString(body);
-                    //    Console.WriteLine($" [x] Received {message}");
-                    //};
-                    //channel.BasicConsume(queue: "hello",
-                    //    autoAck: true,
-                    //    consumer: consumer);
-                    /*
-                    //using var response = await _client.GetAsync(_configuration.Url, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
-                    //_logger.LogInformation("Is '{Host}' responding: {Status}",
-                    //    _configuration.Value.Url.Authority, response.IsSuccessStatusCode);
-
-
-                    List<string> consumeList = new List<string>();
-
-                    var factory = new ConnectionFactory { HostName = "localhost" };
-                    using var connection = factory.CreateConnection();
-                    using var channel = connection.CreateModel();
-
-                    channel.QueueDeclare(queue: "orders",
-                        durable: false,
-                        exclusive: false,
-                        autoDelete: false,
-                        arguments: null);
-                    //Set Event object which listen message from chanel which is sent by producer
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += (model, eventArgs) =>
-                    {
-                        var body = eventArgs.Body.ToArray();
-                        var message = Encoding.UTF8.GetString(body);
-                        consumeList.Add(message);
-                    };
-                    //Thread.Sleep(TimeSpan.FromSeconds(5));
-                    channel.BasicConsume(queue: "orders", autoAck: true, consumer: consumer);
-                    */
-                }
-                catch (Exception ex)
-                {
-                    //_logger.LogWarning(ex, "Error during ping");
-                }
-            }
+            }, cancanCancellationToken);
         }
+        catch (Exception ex)
+        {
+            //_logger.LogWarning(ex, "Error during ping");
+        }
+
+        await Task.CompletedTask;
     }
 }
