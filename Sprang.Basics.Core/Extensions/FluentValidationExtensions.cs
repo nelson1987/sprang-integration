@@ -51,13 +51,13 @@ public static class FluentResultsExtensions
     public record Error(string Message, IDictionary<string, object>? Metadata);
     public record ErrorResponse(Error[] Errors);
 
-    public static Result ToFailResult(this FluentValidation.Results.ValidationResult validationResult)
+    public static Task<Result> ToFailResult(this FluentValidation.Results.ValidationResult validationResult)
     {
         var errors = validationResult.Errors.Select(x => new FluentResults.Error(x.ErrorMessage)
             .WithMetadata(nameof(x.PropertyName), x.PropertyName)
             .WithMetadata(nameof(x.AttemptedValue), x.AttemptedValue));
 
-        return Result.Fail(errors);
+        return Task.FromResult(Result.Fail(errors));
     }
     public static string[] GetErrorsMessage(this ResultBase result) => 
         result.Errors.Select(x => x.Message).ToArray();

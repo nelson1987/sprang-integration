@@ -2,7 +2,7 @@
 
 namespace Sprang.Basics.Core;
 
-public interface IFuncionaroHandler
+public interface IFuncionarioHandler
 {
     Task<Result> Handle(CancellationToken cancellationToken = default);
 }
@@ -26,7 +26,7 @@ public interface IEventBus<TEvent> where TEvent : class
     Task Send(TEvent @event, CancellationToken cancellationToken = default);
 }
 
-public record InclusaoFuncionarioCommand(string Nome);
+public record InclusaoFuncionarioCommand(string Nome) : BaseCommand;
 
 public class InclusaoContaCommandValidator : AbstractValidator<InclusaoFuncionarioCommand>
 {
@@ -36,23 +36,19 @@ public class InclusaoContaCommandValidator : AbstractValidator<InclusaoFuncionar
     }
 }
 
-public record FuncionarioIncluidoEvent(string Nome);
+public record FuncionarioIncluidoEvent(string Nome) : BaseEvent;
 
 public record Funcionario(string Nome);
 
 public record Gerente(string Nome);
 
-public class FuncionaroHandler : IFuncionaroHandler
+public class FuncionarioHandler : GenericHandler<InclusaoFuncionarioCommand, FuncionarioIncluidoEvent>, IFuncionarioHandler
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IEventBus<FuncionarioIncluidoEvent> _eventBus;
-    private readonly IValidator<InclusaoFuncionarioCommand> _validator;
-
-    public FuncionaroHandler(IUnitOfWork unitOfWork,
-                            IEventBus<FuncionarioIncluidoEvent> eventBus)
+    public FuncionarioHandler(
+        IUnitOfWork unitOfWork,
+        IEventBus<FuncionarioIncluidoEvent> eventBus,
+        IValidator<InclusaoFuncionarioCommand> validator) : base(unitOfWork, eventBus, validator)
     {
-        _unitOfWork = unitOfWork;
-        _eventBus = eventBus;
     }
 
     public async Task<Result> Handle(CancellationToken cancellationToken = default)
@@ -78,5 +74,34 @@ public class FuncionaroHandler : IFuncionaroHandler
             return Result.Fail(e.Message);
         }
         return Result.Ok();
+    }
+}
+
+public abstract record BaseCommand();
+
+public abstract record BaseEvent();
+
+public interface IGenericHandler<TCommand, TEvent>
+    where TCommand : BaseCommand
+    where TEvent : BaseEvent
+{
+    Task<Result> Handle();
+}
+
+public abstract class GenericHandler<TCommand, TEvent>
+    where TCommand : BaseCommand
+    where TEvent : BaseEvent
+{
+    protected readonly IUnitOfWork _unitOfWork;
+    protected readonly IEventBus<FuncionarioIncluidoEvent> _eventBus;
+    protected readonly IValidator<InclusaoFuncionarioCommand> _validator;
+
+    protected GenericHandler(IUnitOfWork unitOfWork,
+        IEventBus<FuncionarioIncluidoEvent> eventBus,
+        IValidator<InclusaoFuncionarioCommand> validator)
+    {
+        _unitOfWork = unitOfWork;
+        _eventBus = eventBus;
+        _validator = validator;
     }
 }
