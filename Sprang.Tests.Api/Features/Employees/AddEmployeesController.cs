@@ -35,19 +35,6 @@ public interface IAddEmployeeCommandHandler
     Task<Result> Handle(AddEmployeeCommand command, CancellationToken cancellationToken);
 }
 
-public interface IUnitOfWork : IAsyncDisposable
-{
-    IRepository Employees { get; set; }
-    IRepository Managers { get; set; }
-    Task<int> CommitAsync(CancellationToken cancellationToken = default);
-    Task<int> Rollback();
-}
-
-public interface IRepository
-{
-    Task<int> InsertAsync(CancellationToken cancellationToken = default);
-}
-
 public class AddEmployeeCommandHandler : IAddEmployeeCommandHandler
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -59,30 +46,25 @@ public class AddEmployeeCommandHandler : IAddEmployeeCommandHandler
 
     public async Task<Result> Handle(AddEmployeeCommand command, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _unitOfWork.Employees.InsertAsync(cancellationToken);
-            await _unitOfWork.Managers.InsertAsync(cancellationToken);
-            await _unitOfWork.CommitAsync(cancellationToken);
-            //throw new NotImplementedException();
 
-            //Buscar as contas a serem debitadas e creditadas
-            //Persistir os dados
-            //Publicar Transferencia
-            //var autorizado = await _httpExternalServiceClient.GetTaskAsync(cancellationToken);
-            //if (!autorizado) return Result.Fail("Não Autorizado.");
+        await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        await _unitOfWork.Employees.InsertAsync(cancellationToken);
+        await _unitOfWork.Managers.InsertAsync(cancellationToken);
+        await _unitOfWork.CommitAsync(cancellationToken);
+        //throw new NotImplementedException();
 
-            //Movement aluno = command;
-            //await _writeRepository.CreateAsync(aluno, cancellationToken);
+        //Buscar as contas a serem debitadas e creditadas
+        //Persistir os dados
+        //Publicar Transferencia
+        //var autorizado = await _httpExternalServiceClient.GetTaskAsync(cancellationToken);
+        //if (!autorizado) return Result.Fail("Não Autorizado.");
 
-            //MovementEvent @event = aluno;
-            //await _producer.Send(@event, cancellationToken);
-            return Result.Ok();
-        }
-        catch (Exception ex)
-        {
-            await _unitOfWork.Rollback();
-        }
+        //Movement aluno = command;
+        //await _writeRepository.CreateAsync(aluno, cancellationToken);
+
+        //MovementEvent @event = aluno;
+        //await _producer.Send(@event, cancellationToken);
+        return Result.Ok();
     }
 }
 public static class Dependencies
