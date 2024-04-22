@@ -28,4 +28,5 @@ public sealed class MsSqlServerContainerTest : IAsyncLifetime
     public Task DisposeAsync()
         => _msSqlContainer.DisposeAsync().AsTask();
 }
+https://www.milanjovanovic.tech/blog/testcontainers-integration-testing-using-docker-in-dotnet
 */
