@@ -28,8 +28,8 @@ builder.Services.AddHealthChecks()
 
 
 builder.Services.Configure<PingWebsiteSettings>(_configuration.GetSection("PingWebsite"));
-builder.Services.AddHostedService<PingBackgroundService>();
-builder.Services.AddHttpClient(nameof(PingBackgroundService));
+//builder.Services.AddHostedService<PingBackgroundService>();
+//builder.Services.AddHttpClient(nameof(PingBackgroundService));
 
 //builder.Host.UseSerilog((context, loggerConfig) =>
 //    loggerConfig.ReadFrom.Configuration(context.Configuration));

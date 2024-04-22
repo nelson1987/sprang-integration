@@ -57,8 +57,8 @@ public class FuncionarioHandler : GenericHandler<InclusaoFuncionarioCommand, Fun
         {
             var command = new InclusaoFuncionarioCommand("Nome");
             var result = _validator.Validate(command);
-            if (result != null)
-                return result.ToFailResult();
+            //if (result != null)
+            //    return result.ToFailResult();
 
             await _unitOfWork.BeginTransactionAsync(cancellationToken);
             await _unitOfWork.Funcionarios.InsertAsync(command.MapTo<Funcionario>(), cancellationToken);

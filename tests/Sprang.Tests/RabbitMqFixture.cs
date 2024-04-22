@@ -19,7 +19,7 @@ public static class RabbitMqFixture
             exclusive: false,
             autoDelete: false,
             arguments: null);
-        //Set Event object which listen message from chanel which is sent by producer
+
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += (model, eventArgs) =>
         {

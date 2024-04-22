@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprang.Tests", "tests\Spran
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprang.Tests.Api", "Sprang.Tests.Api\Sprang.Tests.Api.csproj", "{2804E04C-AF33-458F-A859-A4321808639D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sprang.Basics.Core", "Sprang.Basics.Core\Sprang.Basics.Core.csproj", "{DAAA8E1D-DBF1-414D-B57F-2A209745030F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sprang.Basics.Core", "Sprang.Basics.Core\Sprang.Basics.Core.csproj", "{DAAA8E1D-DBF1-414D-B57F-2A209745030F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

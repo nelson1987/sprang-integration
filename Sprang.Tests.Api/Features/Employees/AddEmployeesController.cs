@@ -37,20 +37,20 @@ public interface IAddEmployeeCommandHandler
 
 public class AddEmployeeCommandHandler : IAddEmployeeCommandHandler
 {
-    private readonly IUnitOfWork _unitOfWork;
+    //private readonly IUnitOfWork _unitOfWork;
 
-    public AddEmployeeCommandHandler(IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
+    //public AddEmployeeCommandHandler(IUnitOfWork unitOfWork)
+    //{
+    //    _unitOfWork = unitOfWork;
+    //}
 
     public async Task<Result> Handle(AddEmployeeCommand command, CancellationToken cancellationToken)
     {
 
-        await _unitOfWork.BeginTransactionAsync(cancellationToken);
-        await _unitOfWork.Employees.InsertAsync(cancellationToken);
-        await _unitOfWork.Managers.InsertAsync(cancellationToken);
-        await _unitOfWork.CommitAsync(cancellationToken);
+        //await _unitOfWork.BeginTransactionAsync(cancellationToken);
+        //await _unitOfWork.Employees.InsertAsync(cancellationToken);
+        //await _unitOfWork.Managers.InsertAsync(cancellationToken);
+        //await _unitOfWork.CommitAsync(cancellationToken);
         //throw new NotImplementedException();
 
         //Buscar as contas a serem debitadas e creditadas

@@ -13,5 +13,19 @@ public class TriggonApi : WebApplicationFactory<Program>
         => builder.UseEnvironment("Test")
             .ConfigureTestServices(services =>
             {
+            })
+            .ConfigureAppConfiguration(configure =>
+            {
+                configure.Add(new RabbitMqConfigurationSource());
             });
 }
+//public sealed class CustomWebApplicationFactory : WebApplicationFactory<Program>
+//{
+//    protected override void ConfigureWebHost(IWebHostBuilder builder)
+//    {
+//        builder.ConfigureAppConfiguration(configure =>
+//        {
+//            configure.Add(new RabbitMqConfigurationSource());
+//        });
+//    }
+//}

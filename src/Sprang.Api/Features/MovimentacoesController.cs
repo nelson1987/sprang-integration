@@ -6,7 +6,6 @@ namespace Sprang.Api.Features;
 [Route("api/[Controller]")]
 public class MovimentacoesController : ApiControllerBase
 {
-
     //[FeatureGate(FeatureFlags.Santa)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
